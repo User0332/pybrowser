@@ -33,6 +33,7 @@ class Console(WebAPIClassBase):
 
 	def log(self, *args):
 		text = ' '.join(str(arg) for arg in args)
+
 		output = tk.Label(
 			self._frame, text=text, 
 			height=len(text.splitlines())+1, width=self._frame.winfo_width()

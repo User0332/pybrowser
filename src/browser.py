@@ -14,7 +14,7 @@ screen_x, screen_y = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 
 try:
 	text, _location = get_site.get(
-		input("URL or path: ")
+		input("URL: ")
 	)
 except KeyboardInterrupt:
 	print("\nCTRL-C -- Exit")
@@ -45,8 +45,9 @@ class _Object(domapi.webapi_classes.WebAPIClassBase):
 		)
 
 def make_new_console_input():
-	console_input = tk.Entry(console_frame)
+	console_input = tk.Entry(console_window)
 	console_input.bind("<Return>", exec_js)
+	
 	console_input.pack()
 
 	return console_input
@@ -65,7 +66,7 @@ def exec_js(event: tk.Event):
 	
 	try:	
 		main_func = js2py.eval_js(js)
-		console.log(main_func(window_obj, document, location_obj, console, refs, globals()))
+		console.log(main_func(window, document, location, console, refs, globals()))
 	except js2py.PyJsException as e:
 		console.log(f"Error: {e}") # change to console.error once implemented
 		make_new_console_input()
@@ -78,24 +79,17 @@ browser_window.title("PyBrowser")
 browser_window.geometry(f"{screen_x}x{screen_y}")
 browser_window.resizable(True, True)
 
-console_frame = tk.Frame(
-	browser_window, 
-	height=screen_y, 
-	width=screen_x/3
-)
+console_window = tk.Tk()
+console_window.title("PyBrowser JavaScript Console")
+console_window.geometry("500x800")
+console_window.resizable(True, True)
 
 refs = _Object()
-console = Console(console_frame)
-location_obj = Location(_location, "<protocol>")
-window_obj = Window(document, location_obj, browser_window)
+console = Console(console_window)
+location = Location(_location, "<protocol>")
+window = Window(document, location, browser_window)
 
 make_new_console_input()
 
-console_frame.pack(
-	side=tk.TOP, 
-	anchor=tk.NE,
-	padx=10,
-	pady=10
-)
-
+browser_window.after(0, console_window.mainloop)
 browser_window.mainloop()
