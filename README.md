@@ -1,6 +1,6 @@
 # PyBrowser
 
-An attempt at a browser written in Python.
+An attempt at a web browser written in Python.
 
 <br/>
 
